@@ -3,6 +3,7 @@ import type { Message } from "@/types/chat"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { StreamingText } from "./StreamingText"
 import { InlineMarkdown } from "./InlineMarkdown"
+import { MapViewerCard } from "./MapViewerCard"
 import { Bot, User } from "lucide-react"
 
 interface ChatMessageProps {
@@ -41,6 +42,9 @@ export const ChatMessage = memo(function ChatMessage({
         ) : (
           <InlineMarkdown content={message.content} />
         )}
+        {message.mapUrls?.map((url) => (
+          <MapViewerCard key={url} url={url} />
+        ))}
       </div>
     </div>
   )

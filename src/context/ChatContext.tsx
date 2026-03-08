@@ -21,6 +21,7 @@ type ChatAction =
   | { type: "ADD_USER_MESSAGE"; payload: Message }
   | { type: "ADD_ASSISTANT_MESSAGE"; payload: Message }
   | { type: "APPEND_TOKEN"; payload: string }
+  | { type: "APPEND_MAP_URL"; payload: string }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
   | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
@@ -48,6 +49,17 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
         messages[messages.length - 1] = {
           ...last,
           content: last.content + action.payload,
+        }
+      }
+      return { ...state, messages }
+    }
+    case "APPEND_MAP_URL": {
+      const messages = [...state.messages]
+      const last = messages[messages.length - 1]
+      if (last && last.role === "assistant") {
+        messages[messages.length - 1] = {
+          ...last,
+          mapUrls: [...(last.mapUrls ?? []), action.payload],
         }
       }
       return { ...state, messages }
@@ -159,6 +171,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           switch (event.type) {
             case "token":
               dispatch({ type: "APPEND_TOKEN", payload: event.data })
+              break
+            case "map_viewer":
+              dispatch({ type: "APPEND_MAP_URL", payload: event.data })
               break
             case "done":
               dispatch({ type: "STREAM_COMPLETE" })

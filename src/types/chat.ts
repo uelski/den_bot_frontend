@@ -8,6 +8,7 @@ export interface Message {
   content: string
   timestamp: number
   isStreaming: boolean
+  mapUrls?: string[]
 }
 
 export interface Conversation {
