@@ -44,18 +44,23 @@ export function createSSEConnection(
         const lines = buffer.split("\n")
         buffer = lines.pop() ?? ""
 
+        let currentEvent = ""
         let currentData = ""
 
         for (const line of lines) {
-          if (line.startsWith("data: ")) {
+          if (line.startsWith("event: ")) {
+            currentEvent = line.slice(7).trim()
+          } else if (line.startsWith("data: ")) {
             currentData = line.slice(6)
           } else if (line.trim() === "" && currentData) {
             try {
-              const event = JSON.parse(currentData) as SSEEvent
+              const parsed = JSON.parse(currentData)
+              const event = { type: currentEvent || parsed.type, ...parsed } as SSEEvent
               callbacks.onEvent(event)
             } catch {
               callbacks.onEvent({ type: "token", data: currentData })
             }
+            currentEvent = ""
             currentData = ""
           }
         }
