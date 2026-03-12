@@ -22,6 +22,7 @@ type ChatAction =
   | { type: "ADD_ASSISTANT_MESSAGE"; payload: Message }
   | { type: "APPEND_TOKEN"; payload: string }
   | { type: "APPEND_MAP_URL"; payload: string }
+  | { type: "APPEND_SOURCE"; payload: { service_name: string; base_url: string }[] }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
   | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
@@ -60,6 +61,17 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
         messages[messages.length - 1] = {
           ...last,
           mapUrls: [...(last.mapUrls ?? []), action.payload],
+        }
+      }
+      return { ...state, messages }
+    }
+    case "APPEND_SOURCE": {
+      const messages = [...state.messages]
+      const last = messages[messages.length - 1]
+      if (last && last.role === "assistant") {
+        messages[messages.length - 1] = {
+          ...last,
+          sources: [...(last.sources ?? []), ...action.payload],
         }
       }
       return { ...state, messages }
@@ -174,6 +186,14 @@ export function ChatProvider({ children }: { children: ReactNode }) {
               break
             case "map_viewer":
               dispatch({ type: "APPEND_MAP_URL", payload: event.data })
+              break
+            case "sources":
+              if (event.metadata?.sources) {
+                dispatch({
+                  type: "APPEND_SOURCE",
+                  payload: event.metadata.sources as { service_name: string; base_url: string }[],
+                })
+              }
               break
             case "done":
               dispatch({ type: "STREAM_COMPLETE" })

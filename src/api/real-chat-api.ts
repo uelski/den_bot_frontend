@@ -11,6 +11,7 @@ import { createSSEConnection } from "./sse-client"
 type BackendEvent =
   | { type: "token"; text: string }
   | { type: "map_viewer"; url: string }
+  | { type: "sources"; sources: { service_name: string; base_url: string }[] }
   | { type: "done" }
   | { type: "error"; message: string }
 
@@ -20,6 +21,8 @@ function normalizeEvent(raw: BackendEvent): SSEEvent {
       return { type: "token", data: raw.text }
     case "map_viewer":
       return { type: "map_viewer", data: raw.url, metadata: { url: raw.url } }
+    case "sources":
+      return { type: "sources", data: "", metadata: { sources: raw.sources } }
     case "done":
       return { type: "done", data: "" }
     case "error":

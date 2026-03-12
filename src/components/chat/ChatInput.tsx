@@ -48,7 +48,7 @@ export function ChatInput({ onSend, onStop, streamStatus }: ChatInputProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="border-t bg-background px-4 py-3"
+      className="border-t bg-background px-4 pb-8 pt-3"
     >
       <div className="mx-auto flex max-w-3xl items-end gap-2">
         <textarea

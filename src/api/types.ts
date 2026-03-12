@@ -6,7 +6,7 @@ export interface SendMessageRequest {
 }
 
 export interface SSEEvent {
-  type: "token" | "done" | "error" | "metadata" | "map_viewer"
+  type: "token" | "done" | "error" | "metadata" | "map_viewer" | "sources"
   data: string
   metadata?: Record<string, unknown>
 }
