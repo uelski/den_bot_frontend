@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { StreamingText } from "./StreamingText"
 import { InlineMarkdown } from "./InlineMarkdown"
 import { MapViewerCard } from "./MapViewerCard"
+import { SourcesCard } from "./SourcesCard"
 import { Bot, User } from "lucide-react"
 
 interface ChatMessageProps {
@@ -31,7 +32,7 @@ export const ChatMessage = memo(function ChatMessage({
         </AvatarFallback>
       </Avatar>
       <div
-        className={`max-w-[75%] rounded-lg px-4 py-2.5 text-sm leading-relaxed ${
+        className={`max-w-[75%] break-words rounded-lg px-4 py-2.5 text-sm leading-relaxed ${
           isUser
             ? "bg-primary text-primary-foreground"
             : "bg-muted text-foreground"
@@ -45,6 +46,9 @@ export const ChatMessage = memo(function ChatMessage({
         {message.mapUrls?.map((url) => (
           <MapViewerCard key={url} url={url} />
         ))}
+        {message.sources && message.sources.length > 0 && (
+          <SourcesCard sources={message.sources} />
+        )}
       </div>
     </div>
   )
