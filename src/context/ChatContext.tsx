@@ -22,7 +22,7 @@ type ChatAction =
   | { type: "ADD_ASSISTANT_MESSAGE"; payload: Message }
   | { type: "APPEND_TOKEN"; payload: string }
   | { type: "APPEND_MAP_URL"; payload: string }
-  | { type: "APPEND_SOURCE"; payload: { service_name: string; base_url: string } }
+  | { type: "APPEND_SOURCE"; payload: { service_name: string; base_url: string }[] }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
   | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
@@ -71,7 +71,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       if (last && last.role === "assistant") {
         messages[messages.length - 1] = {
           ...last,
-          sources: [...(last.sources ?? []), action.payload],
+          sources: [...(last.sources ?? []), ...action.payload],
         }
       }
       return { ...state, messages }
@@ -188,13 +188,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
               dispatch({ type: "APPEND_MAP_URL", payload: event.data })
               break
             case "sources":
-              if (event.metadata) {
+              if (event.metadata?.sources) {
                 dispatch({
                   type: "APPEND_SOURCE",
-                  payload: {
-                    service_name: event.metadata.service_name as string,
-                    base_url: event.metadata.base_url as string,
-                  },
+                  payload: event.metadata.sources as { service_name: string; base_url: string }[],
                 })
               }
               break
