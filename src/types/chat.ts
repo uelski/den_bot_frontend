@@ -9,7 +9,7 @@ export interface Message {
   timestamp: number
   isStreaming: boolean
   mapUrls?: string[]
-  sources?: { service_name: string; base_url: string }[]
+  sources?: { service_name: string; base_url: string; hub_url?: string }[]
 }
 
 export interface Conversation {

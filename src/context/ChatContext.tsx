@@ -21,8 +21,8 @@ type ChatAction =
   | { type: "ADD_USER_MESSAGE"; payload: Message }
   | { type: "ADD_ASSISTANT_MESSAGE"; payload: Message }
   | { type: "APPEND_TOKEN"; payload: string }
-  | { type: "APPEND_MAP_URL"; payload: string }
-  | { type: "APPEND_SOURCE"; payload: { service_name: string; base_url: string }[] }
+  | { type: "APPEND_MAP_URLS"; payload: string[] }
+  | { type: "APPEND_SOURCE"; payload: { service_name: string; base_url: string; hub_url?: string }[] }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
   | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
@@ -54,13 +54,13 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
       }
       return { ...state, messages }
     }
-    case "APPEND_MAP_URL": {
+    case "APPEND_MAP_URLS": {
       const messages = [...state.messages]
       const last = messages[messages.length - 1]
       if (last && last.role === "assistant") {
         messages[messages.length - 1] = {
           ...last,
-          mapUrls: [...(last.mapUrls ?? []), action.payload],
+          mapUrls: [...(last.mapUrls ?? []), ...action.payload],
         }
       }
       return { ...state, messages }
@@ -185,13 +185,18 @@ export function ChatProvider({ children }: { children: ReactNode }) {
               dispatch({ type: "APPEND_TOKEN", payload: event.data })
               break
             case "map_viewer":
-              dispatch({ type: "APPEND_MAP_URL", payload: event.data })
+              if (event.metadata?.urls) {
+                dispatch({
+                  type: "APPEND_MAP_URLS",
+                  payload: event.metadata.urls as string[],
+                })
+              }
               break
             case "sources":
               if (event.metadata?.sources) {
                 dispatch({
                   type: "APPEND_SOURCE",
-                  payload: event.metadata.sources as { service_name: string; base_url: string }[],
+                  payload: event.metadata.sources as { service_name: string; base_url: string; hub_url?: string }[],
                 })
               }
               break
