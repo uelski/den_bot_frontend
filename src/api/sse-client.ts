@@ -13,6 +13,8 @@ export function createSSEConnection(
   const controller = new AbortController()
 
   const run = async () => {
+    let receivedDone = false
+
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -52,10 +54,12 @@ export function createSSEConnection(
             currentEvent = line.slice(7).trim()
           } else if (line.startsWith("data: ")) {
             currentData = line.slice(6)
-          } else if (line.trim() === "" && currentData) {
+          } else if (line.trim() === "" && (currentData || currentEvent)) {
             try {
-              const parsed = JSON.parse(currentData)
-              const event = { type: currentEvent || parsed.type, ...parsed } as SSEEvent
+              const parsed = currentData ? JSON.parse(currentData) : {}
+              const eventType = currentEvent || parsed.type
+              const event = { type: eventType, ...parsed } as SSEEvent
+              if (eventType === "done") receivedDone = true
               callbacks.onEvent(event)
             } catch {
               callbacks.onEvent({ type: "token", data: currentData })
@@ -66,10 +70,14 @@ export function createSSEConnection(
         }
       }
 
-      callbacks.onEvent({ type: "done", data: "" })
+      if (!receivedDone) {
+        callbacks.onEvent({ type: "done", data: "" })
+      }
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
-        callbacks.onEvent({ type: "done", data: "" })
+        if (!receivedDone) {
+          callbacks.onEvent({ type: "done", data: "" })
+        }
         return
       }
       const error = err instanceof Error ? err : new Error(String(err))

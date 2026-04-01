@@ -8,25 +8,27 @@ import { API_BASE_URL } from "@/lib/constants"
 import { createSSEConnection } from "./sse-client"
 
 // Raw event shapes as sent by the backend
+type BackendSource = { service_name: string; base_url: string; hub_url?: string }
+
 type BackendEvent =
   | { type: "token"; text: string }
-  | { type: "map_viewer"; url: string }
-  | { type: "sources"; sources: { service_name: string; base_url: string }[] }
+  | { type: "map_viewer"; urls: string[] }
+  | { type: "sources"; sources: BackendSource[] }
   | { type: "done" }
-  | { type: "error"; message: string }
+  | { type: "error"; error: string }
 
 function normalizeEvent(raw: BackendEvent): SSEEvent {
   switch (raw.type) {
     case "token":
       return { type: "token", data: raw.text }
     case "map_viewer":
-      return { type: "map_viewer", data: raw.url, metadata: { url: raw.url } }
+      return { type: "map_viewer", data: "", metadata: { urls: raw.urls } }
     case "sources":
       return { type: "sources", data: "", metadata: { sources: raw.sources } }
     case "done":
       return { type: "done", data: "" }
     case "error":
-      return { type: "error", data: raw.message }
+      return { type: "error", data: raw.error }
   }
 }
 
