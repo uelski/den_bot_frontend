@@ -8,7 +8,7 @@ export interface Message {
   content: string
   timestamp: number
   isStreaming: boolean
-  mapUrls?: string[]
+  mapUrls?: { url: string; label: string }[]
   sources?: { service_name: string; base_url: string; hub_url?: string }[]
 }
 

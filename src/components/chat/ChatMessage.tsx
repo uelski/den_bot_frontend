@@ -43,10 +43,10 @@ export const ChatMessage = memo(function ChatMessage({
         ) : (
           <InlineMarkdown content={message.content} />
         )}
-        {message.mapUrls?.map((url) => (
-          <MapViewerCard key={url} url={url} />
+        {!message.isStreaming && message.mapUrls?.map((mapItem) => (
+          <MapViewerCard key={mapItem.url} url={mapItem.url} label={mapItem.label} />
         ))}
-        {message.sources && message.sources.length > 0 && (
+        {!message.isStreaming && message.sources && message.sources.length > 0 && (
           <SourcesCard sources={message.sources} />
         )}
       </div>

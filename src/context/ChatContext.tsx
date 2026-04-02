@@ -21,7 +21,7 @@ type ChatAction =
   | { type: "ADD_USER_MESSAGE"; payload: Message }
   | { type: "ADD_ASSISTANT_MESSAGE"; payload: Message }
   | { type: "APPEND_TOKEN"; payload: string }
-  | { type: "APPEND_MAP_URLS"; payload: string[] }
+  | { type: "APPEND_MAP_URLS"; payload: { url: string; label: string }[] }
   | { type: "APPEND_SOURCE"; payload: { service_name: string; base_url: string; hub_url?: string }[] }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
@@ -188,7 +188,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
               if (event.metadata?.urls) {
                 dispatch({
                   type: "APPEND_MAP_URLS",
-                  payload: event.metadata.urls as string[],
+                  payload: event.metadata.urls as { url: string; label: string }[],
                 })
               }
               break
