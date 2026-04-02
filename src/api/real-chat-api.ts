@@ -10,9 +10,11 @@ import { createSSEConnection } from "./sse-client"
 // Raw event shapes as sent by the backend
 type BackendSource = { service_name: string; base_url: string; hub_url?: string }
 
+type BackendMapUrl = { url: string; label: string }
+
 type BackendEvent =
   | { type: "token"; text: string }
-  | { type: "map_viewer"; urls: string[] }
+  | { type: "map_viewer"; urls: BackendMapUrl[] }
   | { type: "sources"; sources: BackendSource[] }
   | { type: "done" }
   | { type: "error"; error: string }

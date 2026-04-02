@@ -1,4 +1,5 @@
 import { InlineMarkdown } from "./InlineMarkdown"
+import { LoadingIndicator } from "./LoadingIndicator"
 
 interface StreamingTextProps {
   content: string
@@ -6,6 +7,10 @@ interface StreamingTextProps {
 }
 
 export function StreamingText({ content, isStreaming }: StreamingTextProps) {
+  if (isStreaming && !content) {
+    return <LoadingIndicator />
+  }
+
   return (
     <span>
       <InlineMarkdown content={content} />
