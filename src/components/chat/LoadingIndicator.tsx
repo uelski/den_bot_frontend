@@ -11,17 +11,19 @@ const LOADING_PHRASES = [
   "14ering",
   "subie subieing",
   "mary janeing",
-  "green chile smothering"
+  "green chile smothering",
+  "rocky mountain oystering",
+  "out of oxygening"
 ]
 
 const ROTATE_INTERVAL_MS = 6000
 
 export function LoadingIndicator() {
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(() => Math.floor(Math.random() * LOADING_PHRASES.length))
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % LOADING_PHRASES.length)
+      setIndex(Math.floor(Math.random() * LOADING_PHRASES.length))
     }, ROTATE_INTERVAL_MS)
     return () => clearInterval(interval)
   }, [])
