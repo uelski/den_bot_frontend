@@ -6,7 +6,7 @@ export function AboutContent() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <h2 className="text-2xl font-semibold tracking-tight">
-        About Denver Data Bot
+        About Blue Cypher
       </h2>
       <p className="mt-2 text-muted-foreground">
         An AI-powered assistant for querying Denver city data. Ask questions
