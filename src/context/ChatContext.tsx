@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react"
 import { v4 as uuidv4 } from "uuid"
-import type { Message, StreamStatus, Conversation } from "@/types/chat"
+import type { Message, Source, StreamStatus, Conversation } from "@/types/chat"
 import { chatApi } from "@/api/chat-api"
 import { saveConversation } from "@/lib/storage"
 
@@ -22,7 +22,7 @@ type ChatAction =
   | { type: "ADD_ASSISTANT_MESSAGE"; payload: Message }
   | { type: "APPEND_TOKEN"; payload: string }
   | { type: "APPEND_MAP_URLS"; payload: { url: string; label: string }[] }
-  | { type: "APPEND_SOURCE"; payload: { service_name: string; base_url: string; hub_url?: string }[] }
+  | { type: "APPEND_SOURCE"; payload: Source[] }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
   | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
@@ -196,7 +196,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
               if (event.metadata?.sources) {
                 dispatch({
                   type: "APPEND_SOURCE",
-                  payload: event.metadata.sources as { service_name: string; base_url: string; hub_url?: string }[],
+                  payload: event.metadata.sources as Source[],
                 })
               }
               break

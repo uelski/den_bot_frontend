@@ -27,6 +27,40 @@ export const mockChatApi: ChatApiInterface = {
         const delay = 20 + Math.random() * 60
         timeouts.push(setTimeout(emitNext, delay))
       } else {
+        onEvent({
+          type: "sources",
+          data: "",
+          metadata: {
+            sources: [
+              {
+                service_name: "Denver Parks",
+                base_url: "https://data.denvergov.org/api/action/datastore_search",
+                hub_url: "https://data.denvergov.org/dataset/city-and-county-of-denver-parks",
+              },
+              {
+                service_name: "Denver Neighborhood Demographics (ACS 2017-2021)",
+                base_url: "https://data.denvergov.org/api/action/datastore_search",
+                hub_url: "https://data.denvergov.org/dataset/denver-neighborhoods-demographics",
+                neighborhood_name: "Capitol Hill",
+                doc_type: "neighborhood_demographics",
+              },
+              {
+                service_name: "Denver Neighborhood Demographics (ACS 2017-2021)",
+                base_url: "https://data.denvergov.org/api/action/datastore_search",
+                hub_url: "https://data.denvergov.org/dataset/denver-neighborhoods-demographics",
+                neighborhood_name: "Five Points",
+                doc_type: "neighborhood_demographics",
+              },
+              {
+                service_name: "Denver Neighborhood Demographics (ACS 2017-2021)",
+                base_url: "https://data.denvergov.org/api/action/datastore_search",
+                hub_url: "https://data.denvergov.org/dataset/denver-neighborhoods-demographics",
+                neighborhood_name: "Globeville",
+                doc_type: "neighborhood_demographics",
+              },
+            ],
+          },
+        })
         onEvent({ type: "done", data: "" })
       }
     }
