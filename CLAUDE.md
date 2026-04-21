@@ -98,10 +98,12 @@ src/
 
 ```bash
 nvm use 22          # Required Node version
-npm run dev         # Start dev server
-npm run build       # Type-check + production build
-npm run lint        # ESLint
-npm run preview     # Preview production build
+yarn dev            # Start dev server
+yarn build          # Type-check + production build
+yarn lint           # ESLint
+yarn preview        # Preview production build
+yarn test           # Run tests in watch mode
+yarn test:run       # Run tests once (CI)
 ```
 
 ## Environment Variables
