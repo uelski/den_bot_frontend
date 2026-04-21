@@ -1,5 +1,7 @@
 # Denver Data Bot Frontend
 
+> **Next steps**: See [NEXT_STEPS.md](NEXT_STEPS.md) for current priorities.
+
 AI-powered chat interface for querying Denver city data. The backend uses AI agents (RAG, crawling) to retrieve city data and streams LLM responses via SSE.
 
 ## Tech Stack
