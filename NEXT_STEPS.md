@@ -3,9 +3,11 @@
 Priorities for upcoming work on the frontend.
 
 ## Testing
-- [ ] Add unit tests for React components (ChatMessage, SourcesCard, MessageList, ChatInput, etc.)
-- [ ] Evaluate additional testing paradigms — integration tests, E2E (Playwright/Cypress), visual regression
-- [ ] Set up test runner and CI integration
+- [x] Add unit tests for React components (110 tests across 21 files — vitest + jsdom + testing-library)
+- [x] Set up test runner and CI-ready scripts (`yarn test`, `yarn test:run`)
+- [ ] E2E tests (Playwright) — critical user flows: send message, receive streamed response, view sources, load conversation from history
+- [ ] Integration tests for SSE streaming against a real or mock backend server
+- [ ] Visual regression testing (Chromatic or Percy) for UI consistency across changes
 
 ## Update non-chat content
 - [ ] Audit existing non-chat tabs (History, About) — what's there, what's stale, what's missing
