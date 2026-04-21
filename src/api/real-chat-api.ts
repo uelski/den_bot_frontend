@@ -25,7 +25,7 @@ type BackendEvent =
   | { type: "done" }
   | { type: "error"; error: string }
 
-function normalizeEvent(raw: BackendEvent): SSEEvent {
+export function normalizeEvent(raw: BackendEvent): SSEEvent {
   switch (raw.type) {
     case "token":
       return { type: "token", data: raw.text }
