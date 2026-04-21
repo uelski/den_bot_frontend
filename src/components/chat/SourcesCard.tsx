@@ -52,38 +52,38 @@ export function SourcesCard({ sources }: SourcesCardProps) {
       <p className="mb-1.5 font-medium text-muted-foreground">Sources</p>
       <ul className="flex flex-col gap-2">
         {catalog.map((source) => (
-          <li key={source.base_url} className="inline-flex items-center gap-1.5">
-            <ExternalLink className={`h-3 w-3 shrink-0 ${source.hub_url ? "text-[#477648]" : "text-primary"}`} />
+          <li key={source.base_url} className="flex items-baseline gap-1.5 min-w-0">
+            <ExternalLink className={`h-3 w-3 shrink-0 relative top-[1px] ${source.hub_url ? "text-[#477648]" : "text-primary"}`} />
             <a
               href={source.hub_url ?? source.base_url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`hover:underline ${source.hub_url ? "text-[#477648]" : "text-primary"}`}
+              className={`min-w-0 break-words hover:underline ${source.hub_url ? "text-[#477648]" : "text-primary"}`}
             >
               {source.service_name}
             </a>
-            <span className="text-muted-foreground">·</span>
+            <span className="shrink-0 text-muted-foreground">·</span>
             {source.hub_url ? (
-              <span className="text-[#477648]">Hub</span>
+              <span className="shrink-0 text-[#477648]">Hub</span>
             ) : (
-              <span className="text-muted-foreground">Basic</span>
+              <span className="shrink-0 text-muted-foreground">Basic</span>
             )}
           </li>
         ))}
         {neighborhoodGroups.map((group) => (
           <li key={group.service_name}>
-            <div className="inline-flex items-center gap-1.5">
-              <ExternalLink className="h-3 w-3 shrink-0 text-[#477648]" />
+            <div className="flex items-baseline gap-1.5 min-w-0">
+              <ExternalLink className="h-3 w-3 shrink-0 relative top-[1px] text-[#477648]" />
               <a
                 href={group.hub_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#477648] hover:underline"
+                className="min-w-0 break-words text-[#477648] hover:underline"
               >
                 {group.service_name}
               </a>
-              <span className="text-muted-foreground">·</span>
-              <span className="text-[#477648]">Hub</span>
+              <span className="shrink-0 text-muted-foreground">·</span>
+              <span className="shrink-0 text-[#477648]">Hub</span>
             </div>
             <div className="ml-[18px] mt-1 flex flex-wrap gap-1">
               {group.neighborhoods.map((name) => (
