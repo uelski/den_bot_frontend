@@ -40,4 +40,24 @@ describe("normalizeEvent", () => {
       data: "Server failure",
     })
   })
+
+  it("maps a tool_call event with tool name and args", () => {
+    expect(normalizeEvent({
+      type: "tool_call",
+      tool: "get_neighborhood_weather",
+      status: "running",
+      args: { query: "lodo" },
+    })).toEqual({
+      type: "tool_call",
+      data: "get_neighborhood_weather",
+      metadata: { args: { query: "lodo" } },
+    })
+  })
+
+  it("maps a tool_result event", () => {
+    expect(normalizeEvent({ type: "tool_result" })).toEqual({
+      type: "tool_result",
+      data: "",
+    })
+  })
 })

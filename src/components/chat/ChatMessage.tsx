@@ -39,7 +39,11 @@ export const ChatMessage = memo(function ChatMessage({
         }`}
       >
         {message.isStreaming ? (
-          <StreamingText content={message.content} isStreaming />
+          <StreamingText
+            content={message.content}
+            isStreaming
+            toolCallLabel={message.toolCallLabel}
+          />
         ) : (
           <InlineMarkdown content={message.content} />
         )}

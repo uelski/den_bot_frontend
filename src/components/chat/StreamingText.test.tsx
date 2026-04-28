@@ -29,4 +29,18 @@ describe("StreamingText", () => {
     expect(container.textContent).toContain("Hello")
     expect(container.querySelector(".animate-pulse")).not.toBeInTheDocument()
   })
+
+  it("renders tool call label below loading indicator when streaming with no content", () => {
+    const { container } = render(
+      <StreamingText content="" isStreaming toolCallLabel="Looking up weather…" />
+    )
+    expect(container.textContent).toContain("Looking up weather…")
+  })
+
+  it("does not render tool call label when there is content", () => {
+    const { container } = render(
+      <StreamingText content="Some text" isStreaming toolCallLabel="Looking up weather…" />
+    )
+    expect(container.textContent).not.toContain("Looking up weather…")
+  })
 })

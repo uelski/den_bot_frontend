@@ -10,6 +10,7 @@ import type { Message, Source, Conversation } from "@/types/chat"
 import type { StreamStatus } from "@/types/chat"
 import { chatApi } from "@/api/chat-api"
 import { saveConversation } from "@/lib/storage"
+import { getToolLabel } from "@/lib/constants"
 import { chatReducer } from "./chat-reducer"
 
 export interface ChatContextValue {
@@ -98,6 +99,15 @@ export function ChatProvider({ children }: { children: ReactNode }) {
                   payload: event.metadata.sources as Source[],
                 })
               }
+              break
+            case "tool_call":
+              dispatch({
+                type: "SET_TOOL_CALL",
+                payload: getToolLabel(event.data),
+              })
+              break
+            case "tool_result":
+              dispatch({ type: "CLEAR_TOOL_CALL" })
               break
             case "done":
               dispatch({ type: "STREAM_COMPLETE" })
