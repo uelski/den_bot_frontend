@@ -6,3 +6,11 @@ export const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API !== "false"
 export const STORAGE_KEYS = {
   CONVERSATIONS: "denver-bot-conversations",
 } as const
+
+export const TOOL_LABELS: Record<string, string> = {
+  get_neighborhood_weather: "Looking up weather…",
+}
+
+export function getToolLabel(toolName: string): string {
+  return TOOL_LABELS[toolName] ?? "Using tool…"
+}

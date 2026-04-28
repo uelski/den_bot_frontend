@@ -161,6 +161,31 @@ describe("chatReducer", () => {
     })
   })
 
+  describe("SET_TOOL_CALL", () => {
+    it("sets toolCallLabel on the last assistant message", () => {
+      const msg = makeMessage({ role: "assistant" })
+      const state = makeState({ messages: [msg] })
+      const next = chatReducer(state, { type: "SET_TOOL_CALL", payload: "Looking up weather…" })
+      expect(next.messages[0].toolCallLabel).toBe("Looking up weather…")
+    })
+
+    it("is a no-op when the last message is a user message", () => {
+      const msg = makeMessage({ role: "user" })
+      const state = makeState({ messages: [msg] })
+      const next = chatReducer(state, { type: "SET_TOOL_CALL", payload: "Using tool…" })
+      expect(next.messages[0].toolCallLabel).toBeUndefined()
+    })
+  })
+
+  describe("CLEAR_TOOL_CALL", () => {
+    it("clears toolCallLabel on the last assistant message", () => {
+      const msg = makeMessage({ role: "assistant", toolCallLabel: "Looking up weather…" })
+      const state = makeState({ messages: [msg] })
+      const next = chatReducer(state, { type: "CLEAR_TOOL_CALL" })
+      expect(next.messages[0].toolCallLabel).toBeUndefined()
+    })
+  })
+
   describe("CLEAR_ERROR", () => {
     it("sets error to null", () => {
       const state = makeState({ error: "some error" })

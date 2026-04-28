@@ -65,7 +65,17 @@ export const mockChatApi: ChatApiInterface = {
       }
     }
 
-    timeouts.push(setTimeout(emitNext, 300))
+    // Simulate a tool call before streaming begins
+    timeouts.push(setTimeout(() => {
+      if (controller.signal.aborted) return
+      onEvent({ type: "tool_call", data: "get_neighborhood_weather", metadata: { args: { query: "lodo" } } })
+    }, 200))
+
+    timeouts.push(setTimeout(() => {
+      if (controller.signal.aborted) return
+      onEvent({ type: "tool_result", data: "" })
+      emitNext()
+    }, 1500))
 
     controller.signal.addEventListener("abort", () => {
       timeouts.forEach(clearTimeout)

@@ -16,6 +16,7 @@ export interface Message {
   content: string
   timestamp: number
   isStreaming: boolean
+  toolCallLabel?: string
   mapUrls?: { url: string; label: string }[]
   sources?: Source[]
 }

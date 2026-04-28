@@ -13,6 +13,8 @@ export type ChatAction =
   | { type: "APPEND_TOKEN"; payload: string }
   | { type: "APPEND_MAP_URLS"; payload: { url: string; label: string }[] }
   | { type: "APPEND_SOURCE"; payload: Source[] }
+  | { type: "SET_TOOL_CALL"; payload: string }
+  | { type: "CLEAR_TOOL_CALL" }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
   | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
@@ -62,6 +64,28 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         messages[messages.length - 1] = {
           ...last,
           sources: [...(last.sources ?? []), ...action.payload],
+        }
+      }
+      return { ...state, messages }
+    }
+    case "SET_TOOL_CALL": {
+      const messages = [...state.messages]
+      const last = messages[messages.length - 1]
+      if (last && last.role === "assistant") {
+        messages[messages.length - 1] = {
+          ...last,
+          toolCallLabel: action.payload,
+        }
+      }
+      return { ...state, messages }
+    }
+    case "CLEAR_TOOL_CALL": {
+      const messages = [...state.messages]
+      const last = messages[messages.length - 1]
+      if (last && last.role === "assistant") {
+        messages[messages.length - 1] = {
+          ...last,
+          toolCallLabel: undefined,
         }
       }
       return { ...state, messages }
