@@ -23,7 +23,7 @@ type BackendEvent =
   | { type: "map_viewer"; urls: BackendMapUrl[] }
   | { type: "sources"; sources: BackendSource[] }
   | { type: "tool_call"; tool: string; status: string; args?: Record<string, unknown> }
-  | { type: "tool_result" }
+  | { type: "tool_result"; tool: string; status: string; [key: string]: unknown }
   | { type: "done" }
   | { type: "error"; error: string }
 
@@ -37,8 +37,10 @@ export function normalizeEvent(raw: BackendEvent): SSEEvent {
       return { type: "sources", data: "", metadata: { sources: raw.sources } }
     case "tool_call":
       return { type: "tool_call", data: raw.tool, metadata: { args: raw.args } }
-    case "tool_result":
-      return { type: "tool_result", data: "" }
+    case "tool_result": {
+      const { type: _, ...rest } = raw
+      return { type: "tool_result", data: raw.tool, metadata: rest }
+    }
     case "done":
       return { type: "done", data: "" }
     case "error":

@@ -54,10 +54,24 @@ describe("normalizeEvent", () => {
     })
   })
 
-  it("maps a tool_result event", () => {
-    expect(normalizeEvent({ type: "tool_result" })).toEqual({
+  it("maps a tool_result event with tool name and metadata", () => {
+    expect(normalizeEvent({
       type: "tool_result",
-      data: "",
+      tool: "get_rtd_service_alerts",
+      status: "complete",
+      ok: true,
+      total_active: 49,
+      alerts_url: "https://app.rtd-denver.com/alerts",
+    })).toEqual({
+      type: "tool_result",
+      data: "get_rtd_service_alerts",
+      metadata: {
+        tool: "get_rtd_service_alerts",
+        status: "complete",
+        ok: true,
+        total_active: 49,
+        alerts_url: "https://app.rtd-denver.com/alerts",
+      },
     })
   })
 })

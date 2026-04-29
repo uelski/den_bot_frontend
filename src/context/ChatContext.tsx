@@ -107,7 +107,20 @@ export function ChatProvider({ children }: { children: ReactNode }) {
               })
               break
             case "tool_result":
-              dispatch({ type: "CLEAR_TOOL_CALL" })
+              if (
+                event.data === "get_rtd_service_alerts" &&
+                event.metadata?.ok === true
+              ) {
+                dispatch({
+                  type: "SET_RTD_ALERTS",
+                  payload: {
+                    totalActive: (event.metadata.total_active as number) ?? 0,
+                    alertsUrl:
+                      (event.metadata.alerts_url as string) ??
+                      "https://app.rtd-denver.com/alerts",
+                  },
+                })
+              }
               break
             case "done":
               dispatch({ type: "STREAM_COMPLETE" })

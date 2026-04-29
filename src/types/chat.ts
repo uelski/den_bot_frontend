@@ -10,6 +10,11 @@ export interface Source {
   doc_type?: string
 }
 
+export interface RtdAlerts {
+  totalActive: number
+  alertsUrl: string
+}
+
 export interface Message {
   id: string
   role: MessageRole
@@ -19,6 +24,7 @@ export interface Message {
   toolCallLabel?: string
   mapUrls?: { url: string; label: string }[]
   sources?: Source[]
+  rtdAlerts?: RtdAlerts
 }
 
 export interface Conversation {
