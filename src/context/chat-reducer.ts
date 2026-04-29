@@ -1,4 +1,4 @@
-import type { Message, Source, StreamStatus } from "@/types/chat"
+import type { Message, Source, RtdAlerts, StreamStatus } from "@/types/chat"
 
 export interface ChatState {
   conversationId: string
@@ -15,6 +15,7 @@ export type ChatAction =
   | { type: "APPEND_SOURCE"; payload: Source[] }
   | { type: "SET_TOOL_CALL"; payload: string }
   | { type: "CLEAR_TOOL_CALL" }
+  | { type: "SET_RTD_ALERTS"; payload: RtdAlerts }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
   | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
@@ -42,6 +43,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         messages[messages.length - 1] = {
           ...last,
           content: last.content + action.payload,
+          toolCallLabel: undefined,
         }
       }
       return { ...state, messages }
@@ -86,6 +88,17 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         messages[messages.length - 1] = {
           ...last,
           toolCallLabel: undefined,
+        }
+      }
+      return { ...state, messages }
+    }
+    case "SET_RTD_ALERTS": {
+      const messages = [...state.messages]
+      const last = messages[messages.length - 1]
+      if (last && last.role === "assistant") {
+        messages[messages.length - 1] = {
+          ...last,
+          rtdAlerts: action.payload,
         }
       }
       return { ...state, messages }

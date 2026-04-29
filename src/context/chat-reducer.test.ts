@@ -186,6 +186,24 @@ describe("chatReducer", () => {
     })
   })
 
+  describe("SET_RTD_ALERTS", () => {
+    it("sets rtdAlerts on the last assistant message", () => {
+      const msg = makeMessage({ role: "assistant" })
+      const state = makeState({ messages: [msg] })
+      const alerts = { totalActive: 49, alertsUrl: "https://app.rtd-denver.com/alerts" }
+      const next = chatReducer(state, { type: "SET_RTD_ALERTS", payload: alerts })
+      expect(next.messages[0].rtdAlerts).toEqual(alerts)
+    })
+
+    it("is a no-op when the last message is a user message", () => {
+      const msg = makeMessage({ role: "user" })
+      const state = makeState({ messages: [msg] })
+      const alerts = { totalActive: 10, alertsUrl: "https://example.com" }
+      const next = chatReducer(state, { type: "SET_RTD_ALERTS", payload: alerts })
+      expect(next.messages[0].rtdAlerts).toBeUndefined()
+    })
+  })
+
   describe("CLEAR_ERROR", () => {
     it("sets error to null", () => {
       const state = makeState({ error: "some error" })

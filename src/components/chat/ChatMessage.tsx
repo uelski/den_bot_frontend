@@ -5,6 +5,7 @@ import { StreamingText } from "./StreamingText"
 import { InlineMarkdown } from "./InlineMarkdown"
 import { MapViewerCard } from "./MapViewerCard"
 import { SourcesCard } from "./SourcesCard"
+import { RtdAlertsCard } from "./RtdAlertsCard"
 import { Bot, User } from "lucide-react"
 
 interface ChatMessageProps {
@@ -50,6 +51,9 @@ export const ChatMessage = memo(function ChatMessage({
         {!message.isStreaming && message.mapUrls?.map((mapItem) => (
           <MapViewerCard key={mapItem.url} url={mapItem.url} label={mapItem.label} />
         ))}
+        {!message.isStreaming && message.rtdAlerts && (
+          <RtdAlertsCard alerts={message.rtdAlerts} />
+        )}
         {!message.isStreaming && message.sources && message.sources.length > 0 && (
           <SourcesCard sources={message.sources} />
         )}

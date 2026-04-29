@@ -65,15 +65,26 @@ export const mockChatApi: ChatApiInterface = {
       }
     }
 
-    // Simulate a tool call before streaming begins
+    // Simulate tool calls before streaming begins
     timeouts.push(setTimeout(() => {
       if (controller.signal.aborted) return
-      onEvent({ type: "tool_call", data: "get_neighborhood_weather", metadata: { args: { query: "lodo" } } })
+      onEvent({ type: "tool_call", data: "get_rtd_service_alerts", metadata: { args: { query: "lodo" } } })
     }, 200))
 
     timeouts.push(setTimeout(() => {
       if (controller.signal.aborted) return
-      onEvent({ type: "tool_result", data: "" })
+      onEvent({
+        type: "tool_result",
+        data: "get_rtd_service_alerts",
+        metadata: {
+          tool: "get_rtd_service_alerts",
+          status: "complete",
+          ok: true,
+          total_active: 49,
+          filtered_count: 49,
+          alerts_url: "https://app.rtd-denver.com/alerts",
+        },
+      })
       emitNext()
     }, 1500))
 
