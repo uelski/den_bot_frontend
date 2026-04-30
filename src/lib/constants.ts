@@ -10,6 +10,8 @@ export const STORAGE_KEYS = {
 export const TOOL_LABELS: Record<string, string> = {
   get_neighborhood_weather: "Looking up weather…",
   get_rtd_service_alerts: "Checking RTD alerts…",
+  get_rtd_next_arrivals: "Checking RTD arrivals…",
+  get_rtd_vehicle_positions: "Tracking RTD vehicles…",
 }
 
 export function getToolLabel(toolName: string): string {
