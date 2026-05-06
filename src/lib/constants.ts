@@ -12,6 +12,7 @@ export const TOOL_LABELS: Record<string, string> = {
   get_rtd_service_alerts: "Checking RTD alerts…",
   get_rtd_next_arrivals: "Checking RTD arrivals…",
   get_rtd_vehicle_positions: "Tracking RTD vehicles…",
+  search_denver_gov: "Searching denvergov.org website…",
 }
 
 export function getToolLabel(toolName: string): string {
