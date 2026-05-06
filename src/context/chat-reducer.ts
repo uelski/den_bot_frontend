@@ -2,6 +2,7 @@ import type { Message, Source, RtdAlerts, StreamStatus } from "@/types/chat"
 
 export interface ChatState {
   conversationId: string
+  threadId: string
   messages: Message[]
   streamStatus: StreamStatus
   error: string | null
@@ -18,8 +19,8 @@ export type ChatAction =
   | { type: "SET_RTD_ALERTS"; payload: RtdAlerts }
   | { type: "STREAM_COMPLETE" }
   | { type: "STREAM_ERROR"; payload: string }
-  | { type: "LOAD_CONVERSATION"; payload: { id: string; messages: Message[] } }
-  | { type: "NEW_CONVERSATION"; payload: string }
+  | { type: "LOAD_CONVERSATION"; payload: { id: string; threadId: string; messages: Message[] } }
+  | { type: "NEW_CONVERSATION"; payload: { id: string; threadId: string } }
   | { type: "CLEAR_ERROR" }
 
 export function chatReducer(state: ChatState, action: ChatAction): ChatState {
@@ -124,13 +125,15 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return {
         ...state,
         conversationId: action.payload.id,
+        threadId: action.payload.threadId,
         messages: action.payload.messages,
         streamStatus: "idle",
         error: null,
       }
     case "NEW_CONVERSATION":
       return {
-        conversationId: action.payload,
+        conversationId: action.payload.id,
+        threadId: action.payload.threadId,
         messages: [],
         streamStatus: "idle",
         error: null,

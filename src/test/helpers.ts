@@ -18,6 +18,7 @@ export function makeConversation(overrides?: Partial<Conversation>): Conversatio
   counter++
   return {
     id: `conv-${counter}`,
+    threadId: `thread-${counter}`,
     title: `Conversation ${counter}`,
     messages: [],
     createdAt: Date.now(),

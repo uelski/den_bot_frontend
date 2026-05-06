@@ -5,6 +5,7 @@ import { makeMessage, makeSource } from "@/test/helpers"
 function makeState(overrides?: Partial<ChatState>): ChatState {
   return {
     conversationId: "conv-1",
+    threadId: "thread-1",
     messages: [],
     streamStatus: "idle",
     error: null,
@@ -137,9 +138,10 @@ describe("chatReducer", () => {
       const state = makeState({ messages: [makeMessage()], error: "old" })
       const next = chatReducer(state, {
         type: "LOAD_CONVERSATION",
-        payload: { id: "loaded-id", messages },
+        payload: { id: "loaded-id", threadId: "loaded-thread", messages },
       })
       expect(next.conversationId).toBe("loaded-id")
+      expect(next.threadId).toBe("loaded-thread")
       expect(next.messages).toBe(messages)
       expect(next.streamStatus).toBe("idle")
       expect(next.error).toBeNull()
@@ -153,8 +155,12 @@ describe("chatReducer", () => {
         streamStatus: "complete",
         error: "old",
       })
-      const next = chatReducer(state, { type: "NEW_CONVERSATION", payload: "new-id" })
+      const next = chatReducer(state, {
+        type: "NEW_CONVERSATION",
+        payload: { id: "new-id", threadId: "new-thread" },
+      })
       expect(next.conversationId).toBe("new-id")
+      expect(next.threadId).toBe("new-thread")
       expect(next.messages).toEqual([])
       expect(next.streamStatus).toBe("idle")
       expect(next.error).toBeNull()

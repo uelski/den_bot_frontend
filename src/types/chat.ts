@@ -29,6 +29,7 @@ export interface Message {
 
 export interface Conversation {
   id: string
+  threadId: string
   title: string
   messages: Message[]
   createdAt: number

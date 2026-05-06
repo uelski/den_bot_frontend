@@ -17,6 +17,7 @@ describe("useChat", () => {
   it("returns context value when inside ChatProvider", () => {
     const mockValue: ChatContextValue = {
       conversationId: "test-id",
+      threadId: "test-thread",
       messages: [],
       streamStatus: "idle",
       error: null,

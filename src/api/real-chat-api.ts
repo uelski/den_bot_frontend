@@ -55,7 +55,7 @@ export const realChatApi: ChatApiInterface = {
   ): AbortController {
     return createSSEConnection(
       `${API_BASE_URL}/query`,
-      { query: req.message },
+      { query: req.message, thread_id: req.threadId },
       {
         onEvent: (event) => {
           // createSSEConnection parses JSON and puts it in event.data isn't quite right —

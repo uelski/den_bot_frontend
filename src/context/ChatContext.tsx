@@ -15,12 +15,13 @@ import { chatReducer } from "./chat-reducer"
 
 export interface ChatContextValue {
   conversationId: string
+  threadId: string
   messages: Message[]
   streamStatus: StreamStatus
   error: string | null
   sendMessage: (text: string) => void
   stopStreaming: () => void
-  loadConversation: (id: string, messages: Message[]) => void
+  loadConversation: (conversation: Conversation) => void
   newConversation: () => void
   clearError: () => void
 }
@@ -30,6 +31,7 @@ export const ChatContext = createContext<ChatContextValue | null>(null)
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(chatReducer, {
     conversationId: uuidv4(),
+    threadId: uuidv4(),
     messages: [],
     streamStatus: "idle",
     error: null,
@@ -47,6 +49,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         : "New conversation"
       const conversation: Conversation = {
         id: state.conversationId,
+        threadId: state.threadId,
         title,
         messages,
         createdAt: messages[0].timestamp,
@@ -54,7 +57,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       }
       saveConversation(conversation)
     },
-    [state.conversationId]
+    [state.conversationId, state.threadId]
   )
 
   const sendMessage = useCallback(
@@ -78,7 +81,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       dispatch({ type: "ADD_ASSISTANT_MESSAGE", payload: assistantMessage })
 
       const controller = chatApi.sendMessage(
-        { conversationId: state.conversationId, message: text },
+        {
+          conversationId: state.conversationId,
+          threadId: state.threadId,
+          message: text,
+        },
         (event) => {
           switch (event.type) {
             case "token":
@@ -134,7 +141,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
       abortRef.current = controller
     },
-    [state.conversationId]
+    [state.conversationId, state.threadId]
   )
 
   const stopStreaming = useCallback(() => {
@@ -143,16 +150,23 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const loadConversation = useCallback(
-    (id: string, messages: Message[]) => {
+    (conversation: Conversation) => {
       abortRef.current?.abort()
-      dispatch({ type: "LOAD_CONVERSATION", payload: { id, messages } })
+      const threadId = conversation.threadId ?? uuidv4()
+      dispatch({
+        type: "LOAD_CONVERSATION",
+        payload: { id: conversation.id, threadId, messages: conversation.messages },
+      })
     },
     []
   )
 
   const newConversation = useCallback(() => {
     abortRef.current?.abort()
-    dispatch({ type: "NEW_CONVERSATION", payload: uuidv4() })
+    dispatch({
+      type: "NEW_CONVERSATION",
+      payload: { id: uuidv4(), threadId: uuidv4() },
+    })
   }, [])
 
   const clearError = useCallback(() => {
@@ -173,6 +187,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     <ChatContext.Provider
       value={{
         conversationId: state.conversationId,
+        threadId: state.threadId,
         messages: state.messages,
         streamStatus: state.streamStatus,
         error: state.error,
