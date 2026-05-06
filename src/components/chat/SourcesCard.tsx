@@ -13,25 +13,44 @@ export function SourcesCard({ sources }: SourcesCardProps) {
     <div className="mt-3 rounded-md border bg-muted/50 px-3 py-2.5 text-sm">
       <p className="mb-1.5 font-medium text-muted-foreground">Sources</p>
       <ul className="flex flex-col gap-2">
-        {catalog.map((source) => (
-          <li key={source.base_url} className="flex items-baseline gap-1.5 min-w-0">
-            <ExternalLink className={`h-3 w-3 shrink-0 relative top-[1px] ${source.hub_url ? "text-[#477648]" : "text-primary"}`} />
-            <a
-              href={source.hub_url ?? source.base_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`min-w-0 break-words hover:underline ${source.hub_url ? "text-[#477648]" : "text-primary"}`}
-            >
-              {source.service_name}
-            </a>
-            <span className="shrink-0 text-muted-foreground">·</span>
-            {source.hub_url ? (
-              <span className="shrink-0 text-[#477648]">Hub</span>
-            ) : (
-              <span className="shrink-0 text-muted-foreground">Basic</span>
-            )}
-          </li>
-        ))}
+        {catalog.map((source) => {
+          const isDenverGovSearch = source.doc_type === "denvergov_search_result"
+          const colorClass = isDenverGovSearch
+            ? "text-[#bf311a]"
+            : source.hub_url
+              ? "text-[#477648]"
+              : "text-primary"
+          return (
+            <li key={source.base_url} className="flex items-baseline gap-1.5 min-w-0">
+              <ExternalLink className={`h-3 w-3 shrink-0 relative top-[1px] ${colorClass}`} />
+              <a
+                href={source.hub_url ?? source.base_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`min-w-0 break-words hover:underline ${colorClass}`}
+              >
+                {source.service_name}
+              </a>
+              {isDenverGovSearch ? (
+                <>
+                  <span className="shrink-0 text-muted-foreground">·</span>
+                  <span className="shrink-0 rounded-sm bg-[#FFB81C]/20 px-1.5 text-[11px] font-medium text-[#bf311a]">
+                    denvergov.org
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="shrink-0 text-muted-foreground">·</span>
+                  {source.hub_url ? (
+                    <span className="shrink-0 text-[#477648]">Hub</span>
+                  ) : (
+                    <span className="shrink-0 text-muted-foreground">Basic</span>
+                  )}
+                </>
+              )}
+            </li>
+          )
+        })}
         {neighborhoodGroups.map((group) => (
           <li key={group.service_name}>
             <div className="flex items-baseline gap-1.5 min-w-0">

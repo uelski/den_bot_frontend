@@ -4,16 +4,19 @@ import { Loader2 } from "lucide-react"
 const LOADING_PHRASES = [
   "bluecifering",
   "schussing",
-  "no friends on a pow daying",
-  "rocky mountain highing",
-  "stuck on i70ing",
-  "altitude acclimating",
+  "no-friends-on-a-pow-daying",
+  "tacoma-ing",
+  "rocky-mountain-highing",
+  "stuck-on-i70ing",
+  "altitude-acclimating",
   "14ering",
-  "subie subieing",
-  "mary janeing",
-  "green chile smothering",
-  "rocky mountain oystering",
-  "out of oxygening"
+  "subie-ing",
+  "mary-janeing",
+  "green-chile-smothering",
+  "rocky-mountain-oystering",
+  "namoiste-ing",
+  "4runner-ing",
+  "bacon-bloody-mary-ing"
 ]
 
 const ROTATE_INTERVAL_MS = 6000
