@@ -34,8 +34,8 @@ describe("LoadingIndicator", () => {
       vi.advanceTimersByTime(6000)
     })
 
-    // After interval tick, random returns 0.99 → Math.floor(0.99*12) = 11 → "out of oxygening..."
-    expect(container.textContent).toContain("out of oxygening")
+    // After interval tick, random returns 0.99 → last phrase in LOADING_PHRASES
+    expect(container.textContent).toContain("bacon-bloody-mary-ing")
   })
 
   it("renders an svg spinner icon", () => {

@@ -19,6 +19,7 @@ vi.stubGlobal("localStorage", {
 function makeConversation(id: string): Conversation {
   return {
     id,
+    threadId: `thread-${id}`,
     title: `Conversation ${id}`,
     messages: [],
     createdAt: Date.now(),

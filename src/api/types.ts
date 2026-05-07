@@ -2,6 +2,7 @@ import type { Conversation } from "@/types/chat"
 
 export interface SendMessageRequest {
   conversationId: string
+  threadId: string
   message: string
 }
 

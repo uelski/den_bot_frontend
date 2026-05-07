@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid"
 import type { Conversation } from "@/types/chat"
 import { STORAGE_KEYS } from "./constants"
 
@@ -5,7 +6,8 @@ export function loadAllConversations(): Conversation[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.CONVERSATIONS)
     if (!raw) return []
-    return JSON.parse(raw) as Conversation[]
+    const parsed = JSON.parse(raw) as Conversation[]
+    return parsed.map((c) => (c.threadId ? c : { ...c, threadId: uuidv4() }))
   } catch {
     return []
   }

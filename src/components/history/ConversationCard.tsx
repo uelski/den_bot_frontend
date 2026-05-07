@@ -33,7 +33,7 @@ export function ConversationCard({
     ((conversation.messages[0]?.content.length ?? 0) > 100 ? "..." : "")
 
   const handleClick = () => {
-    loadConversation(conversation.id, conversation.messages)
+    loadConversation(conversation)
     navigate("/")
   }
 

@@ -12,6 +12,7 @@ export function defaultChatValue(
 ): ChatContextValue {
   return {
     conversationId: "test-conv-id",
+    threadId: "test-thread-id",
     messages: [],
     streamStatus: "idle",
     error: null,
