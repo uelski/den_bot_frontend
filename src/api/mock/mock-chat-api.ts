@@ -1,5 +1,12 @@
-import type { ChatApiInterface, SendMessageRequest, SSEEvent } from "../types"
+import type {
+  ChatApiInterface,
+  FeedbackPayload,
+  FeedbackResponse,
+  SendMessageRequest,
+  SSEEvent,
+} from "../types"
 import type { Conversation } from "@/types/chat"
+import { v4 as uuidv4 } from "uuid"
 import {
   loadAllConversations,
   saveConversation as persistConversation,
@@ -107,6 +114,14 @@ export const mockChatApi: ChatApiInterface = {
 
   async deleteConversation(id: string): Promise<void> {
     removeConversation(id)
+  },
+
+  async submitFeedback(payload: FeedbackPayload): Promise<FeedbackResponse> {
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    if (import.meta.env.DEV) {
+      console.info("[mock] submitFeedback", payload)
+    }
+    return { success: true, id: uuidv4() }
   },
 }
 
