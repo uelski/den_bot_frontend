@@ -1,4 +1,10 @@
-import type { ChatApiInterface, SendMessageRequest, SSEEvent } from "./types"
+import type {
+  ChatApiInterface,
+  FeedbackPayload,
+  FeedbackResponse,
+  SendMessageRequest,
+  SSEEvent,
+} from "./types"
 import type { Conversation } from "@/types/chat"
 import {
   loadAllConversations,
@@ -81,5 +87,17 @@ export const realChatApi: ChatApiInterface = {
 
   async deleteConversation(id: string): Promise<void> {
     removeConversation(id)
+  },
+
+  async submitFeedback(payload: FeedbackPayload): Promise<FeedbackResponse> {
+    const res = await fetch(`${API_BASE_URL}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+    if (!res.ok) {
+      throw new Error(`Feedback submission failed: ${res.status}`)
+    }
+    return (await res.json()) as FeedbackResponse
   },
 }

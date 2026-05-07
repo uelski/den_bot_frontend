@@ -18,3 +18,14 @@ export const TOOL_LABELS: Record<string, string> = {
 export function getToolLabel(toolName: string): string {
   return TOOL_LABELS[toolName] ?? "Using tool…"
 }
+
+export const FEEDBACK_CATEGORIES = [
+  "Transportation",
+  "Demographics",
+  "Safety",
+  "Housing",
+  "Environment",
+  "Other",
+] as const
+
+export type FeedbackCategory = (typeof FEEDBACK_CATEGORIES)[number]
