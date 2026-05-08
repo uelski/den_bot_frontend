@@ -5,7 +5,10 @@ import { formatInlineMarkdown } from "./format-markdown"
 // Helper: pull the type and props out of a ReactNode element for easy assertions
 function el(node: React.ReactNode) {
   if (React.isValidElement(node)) {
-    return { type: node.type, props: node.props }
+    return {
+      type: node.type,
+      props: node.props as Record<string, unknown>,
+    }
   }
   return null
 }
