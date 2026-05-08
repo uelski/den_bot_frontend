@@ -27,8 +27,8 @@ describe("LoadingIndicator", () => {
     })
 
     const { container } = render(<LoadingIndicator />)
-    // After render, index should be 0 → "bluecifering..."
-    expect(container.textContent).toContain("bluecifering")
+    // After render, index should be 0 → "blucifering..."
+    expect(container.textContent).toContain("blucifering")
 
     act(() => {
       vi.advanceTimersByTime(6000)
