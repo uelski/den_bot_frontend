@@ -174,6 +174,24 @@ describe("FeedbackPanel", () => {
     expect(onClose).toHaveBeenCalled()
   })
 
+  it("does not close when clicking a portaled Radix Select option", () => {
+    const onClose = vi.fn()
+    renderPanel({ onClose })
+    // Simulate Radix Select rendering its dropdown in a portal on document.body
+    const portal = document.createElement("div")
+    portal.setAttribute("data-slot", "select-content")
+    const option = document.createElement("div")
+    option.setAttribute("role", "option")
+    portal.appendChild(option)
+    document.body.appendChild(portal)
+    try {
+      fireEvent.mouseDown(option)
+      expect(onClose).not.toHaveBeenCalled()
+    } finally {
+      document.body.removeChild(portal)
+    }
+  })
+
   it("shows a thank-you message after success", async () => {
     vi.useFakeTimers()
     submitFeedback.mockResolvedValue({ success: true, id: "x" })

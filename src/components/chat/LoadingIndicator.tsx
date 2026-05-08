@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react"
 
 const LOADING_PHRASES = [
-  "bluecifering",
+  "blucifering",
   "schussing",
   "no-friends-on-a-pow-daying",
   "tacoma-ing",
