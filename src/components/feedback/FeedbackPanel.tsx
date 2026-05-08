@@ -53,7 +53,17 @@ export function FeedbackPanel({
       }
     }
     const onMouseDown = (e: MouseEvent) => {
-      const target = e.target as Node
+      const target = e.target as Element | null
+      if (!target) return
+      // Radix Select/Popover render content in a portal outside the panel.
+      // Clicks inside those should not be treated as outside-the-panel.
+      if (
+        target.closest('[data-radix-popper-content-wrapper]') ||
+        target.closest('[data-slot="select-content"]') ||
+        target.closest('[role="listbox"]')
+      ) {
+        return
+      }
       if (
         panelRef.current &&
         !panelRef.current.contains(target) &&
