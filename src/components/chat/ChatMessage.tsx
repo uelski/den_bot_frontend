@@ -33,7 +33,7 @@ export const ChatMessage = memo(function ChatMessage({
         </AvatarFallback>
       </Avatar>
       <div
-        className={`max-w-[75%] break-words rounded-lg px-4 py-2.5 text-sm leading-relaxed ${
+        className={`max-w-[85%] break-words rounded-lg px-4 py-2.5 text-sm leading-relaxed sm:max-w-[75%] ${
           isUser
             ? "bg-primary text-primary-foreground"
             : "bg-muted text-foreground"

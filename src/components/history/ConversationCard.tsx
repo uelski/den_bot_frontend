@@ -64,7 +64,7 @@ export function ConversationCard({
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+          className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive sm:h-8 sm:w-8"
           onClick={(e) => {
             e.stopPropagation()
             onDelete(conversation.id)

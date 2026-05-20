@@ -34,27 +34,29 @@ export function ConversationList() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">Conversation History</h2>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-destructive hover:text-destructive"
-          onClick={clearAll}
-        >
-          <Trash2 className="mr-2 h-4 w-4" />
-          Clear All
-        </Button>
-      </div>
-      <div className="flex flex-col gap-2">
-        {conversations.map((conversation) => (
-          <ConversationCard
-            key={conversation.id}
-            conversation={conversation}
-            onDelete={deleteConversation}
-          />
-        ))}
+    <div className="h-full overflow-y-auto">
+      <div className="mx-auto max-w-2xl px-4 py-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Conversation History</h2>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-destructive hover:text-destructive"
+            onClick={clearAll}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Clear All
+          </Button>
+        </div>
+        <div className="flex flex-col gap-2">
+          {conversations.map((conversation) => (
+            <ConversationCard
+              key={conversation.id}
+              conversation={conversation}
+              onDelete={deleteConversation}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
