@@ -12,11 +12,24 @@ describe("AboutContent", () => {
     expect(screen.getByText("About Blue Cypher")).toBeInTheDocument()
   })
 
-  it("renders the four feature cards", () => {
+  it("renders the example-question categories", () => {
     render(<AboutContent />)
-    expect(screen.getByText("AI Agents")).toBeInTheDocument()
-    expect(screen.getByText("RAG Pipeline")).toBeInTheDocument()
-    expect(screen.getByText("Web Crawling")).toBeInTheDocument()
-    expect(screen.getByText("Real-time Streaming")).toBeInTheDocument()
+    expect(screen.getByText("Population & demographics")).toBeInTheDocument()
+    expect(screen.getByText("Neighborhoods")).toBeInTheDocument()
+    expect(screen.getByText("Transit & RTD")).toBeInTheDocument()
+    expect(screen.getByText("Parks & recreation")).toBeInTheDocument()
+  })
+
+  it("renders the data source links", () => {
+    render(<AboutContent />)
+    expect(screen.getByText("Denver Open Data Catalog")).toBeInTheDocument()
+    expect(screen.getByText("RTD Open Spatial Data")).toBeInTheDocument()
+    expect(screen.getByText("Denver City Government")).toBeInTheDocument()
+  })
+
+  it("renders the tech stack footer links", () => {
+    render(<AboutContent />)
+    expect(screen.getByText("Frontend repo")).toBeInTheDocument()
+    expect(screen.getByText("Backend repo")).toBeInTheDocument()
   })
 })
