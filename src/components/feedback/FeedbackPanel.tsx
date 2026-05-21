@@ -87,7 +87,7 @@ export function FeedbackPanel({
       aria-labelledby="feedback-heading"
       aria-hidden={!open}
       className={cn(
-        "fixed bottom-20 right-6 z-50 w-[min(22rem,calc(100vw-3rem))] origin-bottom-right rounded-lg border bg-background shadow-xl transition-all",
+        "fixed bottom-[calc(max(1rem,env(safe-area-inset-bottom))+3.5rem)] left-4 z-50 w-[min(22rem,calc(100vw-2rem))] origin-bottom-left rounded-lg border bg-background shadow-xl transition-all sm:bottom-20 sm:left-auto sm:right-6 sm:origin-bottom-right",
         open
           ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
           : "pointer-events-none translate-y-2 scale-95 opacity-0"
