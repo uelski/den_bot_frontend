@@ -27,6 +27,12 @@ dist-ssr
 .wrangler
 .dev.vars*
 
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # Yarn 4 (Berry) — keep yarn.lock and .yarnrc.yml, ignore caches/state
 .yarn/*
 !.yarn/patches

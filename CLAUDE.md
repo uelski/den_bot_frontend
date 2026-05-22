@@ -69,6 +69,9 @@ src/
 
   types/
     chat.ts                    # Message, Conversation, MessageRole, StreamStatus
+
+e2e/
+  smoke.spec.ts                # Playwright smoke test for the chat + history golden path
 ```
 
 ## Architecture Decisions
@@ -104,6 +107,9 @@ yarn lint           # ESLint
 yarn preview        # Preview production build
 yarn test           # Run tests in watch mode
 yarn test:run       # Run tests once (CI)
+yarn e2e            # Run Playwright E2E suite (builds + serves)
+yarn e2e:ui         # Open Playwright UI mode (interactive runner)
+yarn e2e:debug      # Run with the Playwright inspector attached
 ```
 
 ## Environment Variables
@@ -114,6 +120,46 @@ Defined in `.env` (git-ignored). See `.env.example` for template.
 |----------|---------|-------------|
 | `VITE_USE_MOCK_API` | `true` | Use mock streaming API (`false` to use real backend) |
 | `VITE_API_BASE_URL` | `http://localhost:8000` | Backend API base URL |
+
+## End-to-End Tests (Playwright)
+
+E2E tests live in `e2e/` and exercise the built bundle in a real browser. They run against the **mock API** (`VITE_USE_MOCK_API=true`) so they're deterministic and don't need the backend running.
+
+### Running locally
+
+```bash
+yarn e2e            # headless run, builds + serves on port 4173
+yarn e2e:ui         # interactive UI mode — best for authoring/debugging
+yarn e2e:debug      # step through with Playwright Inspector
+```
+
+Playwright's `webServer` config runs `yarn build && yarn preview` automatically. With `reuseExistingServer: !CI`, if you already have a server on `:4173` it'll attach to that instead of rebuilding.
+
+### Configuration
+
+- `playwright.config.ts` — chromium only, retains trace on failure, GitHub reporter in CI
+- `VITE_USE_MOCK_API=true` is injected into the build env by the webServer config, overriding `.env`
+- Vitest `include` is scoped to `src/**/*.test.{ts,tsx}` and explicitly excludes `e2e/**`, so `yarn test` and `yarn e2e` don't pick up each other's specs
+
+### Conventions
+
+- Unit/component tests: `src/**/*.test.{ts,tsx}` (vitest + testing-library)
+- E2E tests: `e2e/**/*.spec.ts` (Playwright)
+- Each E2E test should `localStorage.clear()` in `beforeEach` since conversations persist across page loads
+
+### Selector strategy
+
+Prefer accessible queries (`getByRole`, `getByPlaceholder`, `getByText`) over CSS selectors or `data-testid`. If a control isn't selectable by role, add an `aria-label` (e.g. the icon-only Send/Stop buttons in `ChatInput.tsx`) rather than a test-only attribute — it improves accessibility and stability together.
+
+### Failed runs
+
+Traces are saved under `test-results/` on failure. View with:
+
+```bash
+yarn playwright show-trace test-results/<run-dir>/trace.zip
+```
+
+The `test-results/`, `playwright-report/`, and `playwright/.cache/` directories are gitignored.
 
 ## Connecting the Real Backend
 
