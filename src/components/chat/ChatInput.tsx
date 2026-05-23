@@ -68,6 +68,7 @@ export function ChatInput({ onSend, onStop, streamStatus }: ChatInputProps) {
             variant="destructive"
             size="icon"
             onClick={onStop}
+            aria-label="Stop streaming"
           >
             <Square className="h-4 w-4" />
           </Button>
@@ -76,6 +77,7 @@ export function ChatInput({ onSend, onStop, streamStatus }: ChatInputProps) {
             type="submit"
             size="icon"
             disabled={!input.trim()}
+            aria-label="Send message"
           >
             <Send className="h-4 w-4" />
           </Button>
