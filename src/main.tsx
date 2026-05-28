@@ -7,6 +7,8 @@ import App from "./App"
 import ChatPage from "@/pages/ChatPage"
 import HistoryPage from "@/pages/HistoryPage"
 import AboutPage from "@/pages/AboutPage"
+import AdminPage from "@/pages/AdminPage"
+import { ADMIN_PATH } from "@/lib/constants"
 import "./index.css"
 
 createRoot(document.getElementById("root")!).render(
@@ -20,6 +22,8 @@ createRoot(document.getElementById("root")!).render(
               <Route path="history" element={<HistoryPage />} />
               <Route path="about" element={<AboutPage />} />
             </Route>
+            {/* Hidden, unlinked admin surface — standalone (no AppShell/Navbar). */}
+            <Route path={ADMIN_PATH} element={<AdminPage />} />
           </Routes>
         </ChatProvider>
       </ConversationProvider>
