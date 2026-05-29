@@ -79,7 +79,6 @@ export function MetadataFields({ value, onChange, disabled }: Props) {
           value={value.source_url}
           onChange={(e) => onChange({ ...value, source_url: e.target.value })}
           disabled={disabled}
-          required
           placeholder="https://library.municode.com/co/denver/..."
         />
       </div>

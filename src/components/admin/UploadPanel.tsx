@@ -59,8 +59,7 @@ export function UploadPanel({ password, onSessionExpired }: Props) {
   const isValid =
     file !== null &&
     metadata.document_title.trim().length > 0 &&
-    metadata.original_filename.trim().length > 0 &&
-    metadata.source_url.trim().length > 0
+    metadata.original_filename.trim().length > 0
 
   const handleUpload = async () => {
     if (!file || !isValid || isBusy) return
