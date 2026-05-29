@@ -25,9 +25,13 @@ src/
     types.ts                  # SSEEvent, ChatApiInterface, SendMessageRequest
     sse-client.ts             # Generic fetch-based SSE stream reader (POST, not EventSource)
     chat-api.ts               # API facade — swaps mock/real via VITE_USE_MOCK_API env var
+    admin-types.ts            # AdminApiInterface, UploadMetadata, CreateUploadResponse, AdminApiError
+    admin-api.ts              # Admin API facade — swaps mock/real (same pattern as chat-api)
+    real-admin-api.ts         # Real admin API (validate-password + pdf-upload-url; X-Admin-Password header)
     mock/
       mock-chat-api.ts        # Simulates streaming with setTimeout delays
       mock-responses.ts       # Canned Denver city data responses
+      mock-admin-api.ts       # Dev password + fake signed_url/required_headers
 
   components/
     ui/                       # shadcn/ui generated components (do not edit manually)
@@ -46,6 +50,10 @@ src/
       ConversationCard.tsx     # Preview card with delete, navigates to chat on click
     about/
       AboutContent.tsx         # Static info about the bot
+    admin/
+      AdminGate.tsx            # Password gate (status machine; calls adminApi.validatePassword)
+      UploadPanel.tsx          # PDF picker + metadata + progress bar; orchestrates upload
+      MetadataFields.tsx       # category Select + title/filename/source_url inputs
 
   context/
     ChatContext.tsx             # Active chat state via useReducer (handles rapid token dispatch)
@@ -58,20 +66,23 @@ src/
 
   lib/
     utils.ts                   # shadcn cn() utility
-    constants.ts               # API_BASE_URL, USE_MOCK_API, STORAGE_KEYS
+    constants.ts               # API_BASE_URL, USE_MOCK_API, STORAGE_KEYS, ADMIN_PATH, PDF_CATEGORIES
     storage.ts                 # localStorage CRUD for conversations
+    upload.ts                  # XHR PUT to GCS signed URL with progress + abort (mock:// simulated)
     format-markdown.tsx        # Regex-based inline markdown parser (bold, italic, links)
 
   pages/
     ChatPage.tsx               # Route: /
     HistoryPage.tsx            # Route: /history
     AboutPage.tsx              # Route: /about
+    AdminPage.tsx              # Route: /admin-sv (hidden, unlinked; gate ⇆ upload panel)
 
   types/
     chat.ts                    # Message, Conversation, MessageRole, StreamStatus
 
 e2e/
   smoke.spec.ts                # Playwright smoke test for the chat + history golden path
+  admin-sv.spec.ts             # Playwright spec for the hidden /admin-sv gate + PDF upload (mock)
 ```
 
 ## Architecture Decisions
@@ -87,6 +98,8 @@ e2e/
 **Mock API as default**: `VITE_USE_MOCK_API=true` by default. The mock simulates streaming by splitting canned responses into words with random delays. Swap to real backend by setting `VITE_USE_MOCK_API=false` and implementing `ChatApiInterface` in a new file.
 
 **localStorage for persistence**: Conversations are small text. Saved on stream completion. `ConversationContext` keeps the in-memory list in sync.
+
+**Hidden admin surface (`/admin-sv`)**: An unlinked, password-gated route for uploading PDFs to the knowledge base. It's a *standalone* route in `main.tsx` (outside the `<App />` shell — no Navbar) and is obscurity-only: the path ships in the public bundle, so the real gate is the server password (`X-Admin-Password` header on every admin call; held in `sessionStorage`). PDF bytes never touch our backend — `pdf-upload-url` returns a short-lived GCS signed URL and the browser `PUT`s straight to GCS with the returned headers verbatim (see `src/lib/upload.ts`). Full contract: `docs/admin-api.md`.
 
 ## Conventions
 
