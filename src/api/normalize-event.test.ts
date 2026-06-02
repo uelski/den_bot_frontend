@@ -27,6 +27,24 @@ describe("normalizeEvent", () => {
     })
   })
 
+  it("passes mixed legacy + knowledge_base sources through unchanged", () => {
+    const sources = [
+      { service_name: "Parks", base_url: "https://api.test" },
+      {
+        source_collection: "knowledge_base" as const,
+        document_title: "Denver Code of Ordinances",
+        page_start: 11,
+        page_end: 14,
+        category: "ordinance",
+      },
+    ]
+    expect(normalizeEvent({ type: "sources", sources })).toEqual({
+      type: "sources",
+      data: "",
+      metadata: { sources },
+    })
+  })
+
   it("maps a done event", () => {
     expect(normalizeEvent({ type: "done" })).toEqual({
       type: "done",
