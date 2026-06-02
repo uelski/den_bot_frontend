@@ -1,4 +1,9 @@
-import type { Source } from "@/types/chat"
+import {
+  isKnowledgeBaseSource,
+  type KnowledgeBaseSource,
+  type ServiceSource,
+  type Source,
+} from "@/types/chat"
 
 export interface NeighborhoodGroup {
   service_name: string
@@ -7,11 +12,22 @@ export interface NeighborhoodGroup {
 }
 
 export function groupSources(sources: Source[]) {
-  const catalog: Source[] = []
+  const catalog: ServiceSource[] = []
   const neighborhoodMap = new Map<string, NeighborhoodGroup>()
+  const knowledgeBase: KnowledgeBaseSource[] = []
 
   for (const source of sources) {
-    if (source.doc_type === "neighborhood_demographics" && source.neighborhood_name) {
+    // Strict discriminator check (user direction): only branch into the KB
+    // bucket when source_collection is exactly "knowledge_base". Any other
+    // value — or its absence — stays in the legacy ServiceSource lane.
+    if (isKnowledgeBaseSource(source)) {
+      knowledgeBase.push(source)
+      continue
+    }
+    if (
+      source.doc_type === "neighborhood_demographics" &&
+      source.neighborhood_name
+    ) {
       const key = `${source.service_name}||${source.hub_url ?? source.base_url}`
       const existing = neighborhoodMap.get(key)
       if (existing) {
@@ -36,5 +52,9 @@ export function groupSources(sources: Source[]) {
     return 0
   })
 
-  return { catalog: catalogSorted, neighborhoodGroups: [...neighborhoodMap.values()] }
+  return {
+    catalog: catalogSorted,
+    neighborhoodGroups: [...neighborhoodMap.values()],
+    knowledgeBase,
+  }
 }

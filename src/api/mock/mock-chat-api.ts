@@ -65,6 +65,22 @@ export const mockChatApi: ChatApiInterface = {
                 neighborhood_name: "Globeville",
                 doc_type: "neighborhood_demographics",
               },
+              // RAG KB citations from the ingested PDF knowledge base.
+              {
+                source_collection: "knowledge_base",
+                document_title: "Denver Code of Ordinances",
+                source_url: "https://library.municode.com/co/denver/codes/code_of_ordinances",
+                page_start: 11,
+                page_end: 14,
+                category: "ordinance",
+              },
+              {
+                source_collection: "knowledge_base",
+                document_title: "Denver 2026 Budget Overview",
+                page_start: 42,
+                page_end: 42,
+                category: "budget",
+              },
             ],
           },
         })

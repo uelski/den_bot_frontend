@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { chatReducer, type ChatState } from "./chat-reducer"
-import { makeMessage, makeSource } from "@/test/helpers"
+import { makeMessage, makeSource, makeKbSource } from "@/test/helpers"
 
 function makeState(overrides?: Partial<ChatState>): ChatState {
   return {
@@ -108,6 +108,31 @@ describe("chatReducer", () => {
       const newSources = [makeSource()]
       const next = chatReducer(state, { type: "APPEND_SOURCE", payload: newSources })
       expect(next.messages[0].sources).toHaveLength(2)
+    })
+
+    it("accumulates mixed legacy + knowledge_base sources across events", () => {
+      const msg = makeMessage({ role: "assistant" })
+      const state = makeState({ messages: [msg] })
+      const first = chatReducer(state, {
+        type: "APPEND_SOURCE",
+        payload: [makeSource({ service_name: "Parks" })],
+      })
+      const second = chatReducer(first, {
+        type: "APPEND_SOURCE",
+        payload: [
+          makeKbSource({
+            document_title: "Denver Code of Ordinances",
+            page_start: 11,
+            page_end: 14,
+          }),
+        ],
+      })
+      expect(second.messages[0].sources).toHaveLength(2)
+      // Discriminator survives accumulation.
+      expect(second.messages[0].sources?.[1]).toMatchObject({
+        source_collection: "knowledge_base",
+        document_title: "Denver Code of Ordinances",
+      })
     })
   })
 

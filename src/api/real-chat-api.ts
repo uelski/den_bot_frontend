@@ -14,13 +14,25 @@ import { API_BASE_URL } from "@/lib/constants"
 import { createSSEConnection } from "./sse-client"
 
 // Raw event shapes as sent by the backend
-type BackendSource = {
+type BackendServiceSource = {
   service_name: string
   base_url: string
   hub_url?: string
   neighborhood_name?: string
   doc_type?: string
+  source_collection?: string
 }
+
+type BackendKnowledgeBaseSource = {
+  source_collection: "knowledge_base"
+  document_title: string
+  source_url?: string
+  page_start?: number
+  page_end?: number
+  category?: string
+}
+
+type BackendSource = BackendServiceSource | BackendKnowledgeBaseSource
 
 type BackendMapUrl = { url: string; label: string }
 

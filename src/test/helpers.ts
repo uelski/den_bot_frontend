@@ -1,4 +1,9 @@
-import type { Message, Source, Conversation } from "@/types/chat"
+import type {
+  Message,
+  Source,
+  Conversation,
+  KnowledgeBaseSource,
+} from "@/types/chat"
 
 let counter = 0
 
@@ -32,6 +37,17 @@ export function makeSource(overrides?: Partial<Source>): Source {
   return {
     service_name: `Service ${counter}`,
     base_url: `https://example.com/api/${counter}`,
+    ...overrides,
+  }
+}
+
+export function makeKbSource(
+  overrides?: Partial<KnowledgeBaseSource>
+): KnowledgeBaseSource {
+  counter++
+  return {
+    source_collection: "knowledge_base",
+    document_title: `KB Doc ${counter}`,
     ...overrides,
   }
 }
