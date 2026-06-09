@@ -23,6 +23,7 @@ import {
   Trees,
   Users,
 } from "lucide-react"
+import { UploadedDocsList } from "./UploadedDocsList"
 
 const EXAMPLES = [
   {
@@ -201,6 +202,18 @@ export function AboutContent() {
             </a>
           ))}
         </div>
+
+        <Separator className="my-6" />
+
+        <h3 className="text-lg font-semibold tracking-tight">
+          Knowledge base documents
+        </h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          PDFs ingested into Blue Cypher's knowledge base. View the original
+          on denvergov.org, or download the exact copy Blue Cypher indexed —
+          page citations in answers match it.
+        </p>
+        <UploadedDocsList />
 
         <Separator className="my-6" />
 

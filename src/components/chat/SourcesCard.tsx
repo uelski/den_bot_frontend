@@ -1,6 +1,8 @@
-import { ExternalLink, FileText } from "lucide-react"
-import type { Source } from "@/types/chat"
+import { useState } from "react"
+import { Download, ExternalLink, FileText, Loader2 } from "lucide-react"
+import type { KnowledgeBaseSource, Source } from "@/types/chat"
 import { groupSources } from "@/lib/group-sources"
+import { openDocumentDownload } from "@/lib/download-document"
 
 interface SourcesCardProps {
   sources: Source[]
@@ -105,44 +107,91 @@ export function SourcesCard({ sources }: SourcesCardProps) {
             Knowledge base
           </p>
           <ul className="flex flex-col gap-2">
-            {knowledgeBase.map((kb, i) => {
-              const pageSuffix = formatPageRange(kb.page_start, kb.page_end)
-              return (
-                <li
-                  key={`${kb.document_title}-${kb.page_start ?? "x"}-${kb.page_end ?? "x"}-${i}`}
-                  className="flex items-baseline gap-1.5 min-w-0"
-                >
-                  <FileText className="h-3 w-3 shrink-0 relative top-[1px] text-primary" />
-                  {kb.source_url ? (
-                    <a
-                      href={kb.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="min-w-0 break-words text-primary hover:underline"
-                    >
-                      {kb.document_title}
-                      {pageSuffix}
-                    </a>
-                  ) : (
-                    <span className="min-w-0 break-words text-foreground">
-                      {kb.document_title}
-                      {pageSuffix}
-                    </span>
-                  )}
-                  {kb.category && (
-                    <>
-                      <span className="shrink-0 text-muted-foreground">·</span>
-                      <span className="shrink-0 rounded-sm bg-muted px-1.5 text-[11px] font-medium text-muted-foreground">
-                        {kb.category}
-                      </span>
-                    </>
-                  )}
-                </li>
-              )
-            })}
+            {knowledgeBase.map((kb, i) => (
+              <KbSourceRow
+                key={`${kb.document_title}-${kb.page_start ?? "x"}-${kb.page_end ?? "x"}-${i}`}
+                source={kb}
+              />
+            ))}
           </ul>
         </>
       )}
     </div>
+  )
+}
+
+interface KbSourceRowProps {
+  source: KnowledgeBaseSource
+}
+
+function KbSourceRow({ source: kb }: KbSourceRowProps) {
+  const [downloading, setDownloading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const pageSuffix = formatPageRange(kb.page_start, kb.page_end)
+
+  const handleDownload = async () => {
+    if (!kb.document_id || downloading) return
+    setError(null)
+    setDownloading(true)
+    try {
+      await openDocumentDownload(kb.document_id)
+    } catch {
+      setError("Download link couldn't be generated — try again.")
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  return (
+    <li>
+      <div className="flex items-baseline gap-1.5 min-w-0">
+        <FileText className="h-3 w-3 shrink-0 relative top-[1px] text-primary" />
+        {kb.source_url ? (
+          <a
+            href={kb.source_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="min-w-0 break-words text-primary hover:underline"
+          >
+            {kb.document_title}
+            {pageSuffix}
+          </a>
+        ) : (
+          <span className="min-w-0 break-words text-foreground">
+            {kb.document_title}
+            {pageSuffix}
+          </span>
+        )}
+        {kb.category && (
+          <>
+            <span className="shrink-0 text-muted-foreground">·</span>
+            <span className="shrink-0 rounded-sm bg-muted px-1.5 text-[11px] font-medium text-muted-foreground">
+              {kb.category}
+            </span>
+          </>
+        )}
+        {kb.document_id && (
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloading}
+            aria-label="Download PDF"
+            title="Download PDF"
+            className="ml-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:hover:bg-transparent"
+          >
+            {downloading ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Download className="h-3 w-3" />
+            )}
+          </button>
+        )}
+      </div>
+      {error && (
+        <p className="ml-[18px] mt-1 text-xs text-destructive" role="alert">
+          {error}
+        </p>
+      )}
+    </li>
   )
 }

@@ -19,6 +19,10 @@ export interface ServiceSource {
 export interface KnowledgeBaseSource {
   source_collection: "knowledge_base"
   document_title: string
+  // document_id is what the public download endpoint expects. Optional in the
+  // type so older localStorage conversations (saved before this field existed)
+  // still load — the Download button is just hidden when it's absent.
+  document_id?: string
   source_url?: string
   page_start?: number
   page_end?: number

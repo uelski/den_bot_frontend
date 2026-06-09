@@ -68,6 +68,7 @@ export const mockChatApi: ChatApiInterface = {
               // RAG KB citations from the ingested PDF knowledge base.
               {
                 source_collection: "knowledge_base",
+                document_id: "pdfs/ordinance/2026-05-15T091200-code-of-ordinances.pdf",
                 document_title: "Denver Code of Ordinances",
                 source_url: "https://library.municode.com/co/denver/codes/code_of_ordinances",
                 page_start: 11,
@@ -76,6 +77,7 @@ export const mockChatApi: ChatApiInterface = {
               },
               {
                 source_collection: "knowledge_base",
+                document_id: "pdfs/budget/2026-06-08T143022-budget-highlights.pdf",
                 document_title: "Denver 2026 Budget Overview",
                 page_start: 42,
                 page_end: 42,
