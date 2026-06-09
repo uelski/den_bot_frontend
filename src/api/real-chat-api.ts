@@ -26,6 +26,7 @@ type BackendServiceSource = {
 type BackendKnowledgeBaseSource = {
   source_collection: "knowledge_base"
   document_title: string
+  document_id?: string
   source_url?: string
   page_start?: number
   page_end?: number

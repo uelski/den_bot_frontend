@@ -1,7 +1,25 @@
-import { describe, it, expect, afterEach } from "vitest"
-import { render, screen, cleanup, within } from "@testing-library/react"
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import {
+  fireEvent,
+  render,
+  screen,
+  cleanup,
+  within,
+  waitFor,
+} from "@testing-library/react"
 import { SourcesCard } from "./SourcesCard"
 import { makeSource, makeKbSource } from "@/test/helpers"
+import { KnowledgeBaseApiError } from "@/api/knowledge-base-types"
+
+const openDocumentDownload = vi.fn()
+
+vi.mock("@/lib/download-document", () => ({
+  openDocumentDownload: (...args: unknown[]) => openDocumentDownload(...args),
+}))
+
+beforeEach(() => {
+  openDocumentDownload.mockReset()
+})
 
 afterEach(() => {
   cleanup()
@@ -82,6 +100,59 @@ describe("SourcesCard — knowledge base rendering", () => {
       />
     )
     expect(screen.getByText("budget")).toBeInTheDocument()
+  })
+
+  it("does not render a Download button when document_id is absent", () => {
+    render(
+      <SourcesCard
+        sources={[
+          makeKbSource({
+            document_title: "Untitled Memo",
+            page_start: 1,
+          }),
+        ]}
+      />
+    )
+    expect(
+      screen.queryByRole("button", { name: /Download PDF/i })
+    ).not.toBeInTheDocument()
+  })
+
+  it("renders a Download button when document_id is present and triggers the helper on click", async () => {
+    openDocumentDownload.mockResolvedValue(undefined)
+    render(
+      <SourcesCard
+        sources={[
+          makeKbSource({
+            document_title: "2026 Budget",
+            document_id: "pdfs/budget/x.pdf",
+          }),
+        ]}
+      />
+    )
+    const button = screen.getByRole("button", { name: /Download PDF/i })
+    fireEvent.click(button)
+    await waitFor(() => {
+      expect(openDocumentDownload).toHaveBeenCalledWith("pdfs/budget/x.pdf")
+    })
+  })
+
+  it("surfaces an inline error when the download helper rejects", async () => {
+    openDocumentDownload.mockRejectedValue(new KnowledgeBaseApiError(404))
+    render(
+      <SourcesCard
+        sources={[
+          makeKbSource({
+            document_title: "Missing Doc",
+            document_id: "pdfs/missing/x.pdf",
+          }),
+        ]}
+      />
+    )
+    fireEvent.click(screen.getByRole("button", { name: /Download PDF/i }))
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(/Download link/i)
+    })
   })
 
   it("renders both legacy and KB sources together with their own headers", () => {

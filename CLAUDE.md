@@ -28,10 +28,14 @@ src/
     admin-types.ts            # AdminApiInterface, UploadMetadata, CreateUploadResponse, AdminApiError
     admin-api.ts              # Admin API facade — swaps mock/real (same pattern as chat-api)
     real-admin-api.ts         # Real admin API (validate-password + pdf-upload-url; X-Admin-Password header)
+    knowledge-base-types.ts   # KnowledgeBaseApiInterface, KnowledgeBaseDocument, DownloadUrlResponse, KnowledgeBaseApiError
+    knowledge-base-api.ts     # Public KB API facade — swaps mock/real
+    real-knowledge-base-api.ts # Real KB API (GET /knowledge-base/documents + .../download?document_id=…)
     mock/
       mock-chat-api.ts        # Simulates streaming with setTimeout delays
       mock-responses.ts       # Canned Denver city data responses
       mock-admin-api.ts       # Dev password + fake signed_url/required_headers
+      mock-knowledge-base-api.ts # 3 canned KB docs + mock:// download sentinel
 
   components/
     ui/                       # shadcn/ui generated components (do not edit manually)
@@ -49,7 +53,8 @@ src/
       ConversationList.tsx     # Sorted conversation list with "Clear All"
       ConversationCard.tsx     # Preview card with delete, navigates to chat on click
     about/
-      AboutContent.tsx         # Static info about the bot
+      AboutContent.tsx         # Static info about the bot + mounts UploadedDocsList
+      UploadedDocsList.tsx     # Live KB-docs list (fetch on mount; View on denvergov.org + Download per doc)
     admin/
       AdminGate.tsx            # Password gate (status machine; calls adminApi.validatePassword)
       UploadPanel.tsx          # PDF picker + metadata + progress bar; orchestrates upload
@@ -69,6 +74,7 @@ src/
     constants.ts               # API_BASE_URL, USE_MOCK_API, STORAGE_KEYS, ADMIN_PATH, PDF_CATEGORIES
     storage.ts                 # localStorage CRUD for conversations
     upload.ts                  # XHR PUT to GCS signed URL with progress + abort (mock:// simulated)
+    download-document.ts       # openDocumentDownload: signed-URL fetch + window.open (mock:// no-op)
     format-markdown.tsx        # Regex-based inline markdown parser (bold, italic, links)
 
   pages/
@@ -81,8 +87,9 @@ src/
     chat.ts                    # Message, Conversation, MessageRole, StreamStatus
 
 e2e/
-  smoke.spec.ts                # Playwright smoke test for the chat + history golden path
+  smoke.spec.ts                # Playwright smoke test for the chat + history golden path (incl. KB Download button)
   admin-sv.spec.ts             # Playwright spec for the hidden /admin-sv gate + PDF upload (mock)
+  about.spec.ts                # Playwright spec for the About-page Knowledge-base section (mock)
 ```
 
 ## Architecture Decisions

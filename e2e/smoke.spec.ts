@@ -33,6 +33,13 @@ test.describe("Blue Cypher smoke", () => {
       page.getByRole("button", { name: "Stop streaming" })
     ).toBeHidden({ timeout: 15_000 })
 
+    // The mock response includes KB sources with document_ids, so the
+    // "Knowledge base" subsection should render Download buttons per row.
+    await expect(page.getByText("Knowledge base")).toBeVisible()
+    await expect(
+      page.getByRole("button", { name: "Download PDF" }).first()
+    ).toBeVisible()
+
     await page.getByRole("link", { name: "History" }).click()
     await expect(page).toHaveURL(/\/history$/)
 
